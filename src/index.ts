@@ -1,73 +1,51 @@
-import { Ref, ref } from 'vue-demi';
 
-function isClipboardApiSupported (navigator: Navigator) {
-    return typeof navigator === 'object' && typeof navigator.clipboard === 'object';
+import { onBeforeMount, ref } from 'vue-demi';
+import createImpl, {
+  StateCreator,
+  SetState,
+  State,
+  StoreApi,
+  GetState,
+  Subscribe,
+  Destroy,
+  StateSelector,
+  EqualityChecker,
+} from 'zustand/vanilla';
+
+export interface UseStore<T extends State> {
+  (): T;
+  <U>(selector: StateSelector<T, U>, equalityFn?: EqualityChecker<U>): U;
+  setState: SetState<T>;
+  getState: GetState<T>;
+  subscribe: Subscribe<T>;
+  destroy: Destroy;
 }
 
-function createTextArea () {
-    const textArea = document.createElement('textarea');
-    
-    // Hide textarea element
-    textArea.style.top = '0';
-    textArea.style.left = '0';
-    textArea.style.position = 'fixed';
-    textArea.style.width = '2em';
-    textArea.style.height = '2em';
-    textArea.style.padding = '0';
-    textArea.style.border = 'none';
-    textArea.style.outline = 'none';
-    textArea.style.boxShadow = 'none';
-    textArea.style.background = 'transparent';
+export {
+  default as shallow
+} from 'zustand/shallow';
 
-    document.body.appendChild(textArea);
-    return textArea;
-}
+export default function create<TState extends State>(
+  createState: StateCreator<TState> | StoreApi<TState>
+): UseStore<TState> {
+  const api: StoreApi<TState> =
+    typeof createState === 'function' ? createImpl(createState) : createState;
 
-function removeElement(element: HTMLElement) {
-    element.parentNode!.removeChild(element);
-};
+  const useStore: any = <StateSlice>(
+    selector: StateSelector<TState, StateSlice> = api.getState as any,
+    equalityFn: EqualityChecker<StateSlice> = Object.is
+  ) => {
+    const initialValue = selector(api.getState())
+    const state = ref(initialValue);
+    const unsubscribe = api.subscribe((newState) => {
+       // @ts-ignore
+      state.value = newState;
+    }, selector, equalityFn);
+    onBeforeMount(() => unsubscribe());
+    return state;
+  }
 
-function fallbackCopyTextToClipboard(text: string) {
-    const textArea = createTextArea();
-    textArea.value = text;
-    textArea.focus();
-    textArea.select();
-  
-    const success = document.execCommand('copy');
-    removeElement(textArea);
+  Object.assign(useStore, api);
 
-    if (!success) {
-        throw new Error('Unable to copy.');
-    }
-}
-
-async function copyTextToClipboard(text: string) {
-    if (!isClipboardApiSupported(navigator)) {
-        fallbackCopyTextToClipboard(text);
-        return;
-    }
-    try {
-        await navigator.clipboard.writeText(text);
-    } catch (_err) {
-        throw new Error('Permission not allowed.');
-    }
-}
-
-export default function useClipboard(): [
-    Ref<string>,
-    (text: string) => Promise<void>
-] {
-    const clipboard = ref('');
-
-    const setClipboard = async (text: string) => {
-        try {
-            await copyTextToClipboard(text);
-            clipboard.value = text;
-        } catch (err) {
-            clipboard.value = '';
-            throw new Error(err);
-        }
-    }
-
-    return [clipboard, setClipboard];
+  return useStore;
 }
