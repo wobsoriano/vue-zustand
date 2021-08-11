@@ -2,6 +2,8 @@
 
 State management for Vue using [zustand](https://github.com/pmndrs/zustand).
 
+Demo: https://codesandbox.io/s/vue-zustand-demo-w7pcx
+
 ## Install
 
 ```sh
