@@ -1,7 +1,6 @@
 {
   "name": "vue-zustand",
   "description": "🐻 Bear necessities for Vue.",
-  "type": "module",
   "license": "MIT",
   "version": "0.0.1",
   "main": "dist/vue-zustand.js",
