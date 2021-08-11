@@ -1,5 +1,5 @@
 
-import { onBeforeMount, ref } from 'vue-demi';
+import { onBeforeMount, shallowRef } from 'vue-demi';
 import createImpl, {
   StateCreator,
   SetState,
@@ -36,9 +36,8 @@ export default function create<TState extends State>(
     equalityFn: EqualityChecker<StateSlice> = Object.is
   ) => {
     const initialValue = selector(api.getState())
-    const state = ref(initialValue);
+    const state = shallowRef(initialValue);
     const unsubscribe = api.subscribe((newState) => {
-       // @ts-ignore
       state.value = newState;
     }, selector, equalityFn);
     onBeforeMount(() => unsubscribe());
