@@ -1,38 +1,66 @@
-# v-use-clipboard
+# vue-zustand
 
-Clipboard utility for Vue 2 and 3.
+State management for Vue using [zustand](https://github.com/pmndrs/zustand).
 
-## Quick start
+## Install
 
-Install it:
-
-```bash
-npm install v-use-clipboard
+```sh
+yarn add vue-zustand
 ```
 
-Use it:
+## Example
 
-```html
-<template>
-    <div>
-        <div>{{ clipboard }}</div>
-        <button @click="setClipboard('hello world')">Copy</button>
-    </div>
-</template>
+```jsx
+import create from 'vue-zustand'
 
-<script>
-import { defineComponent } from 'vue'; // or @vue/composition-api for Vue 2
-import useClipboard from 'v-use-clipboard';
+interface BearState {
+  bears: number
+  increase: () => void
+}
 
-export default defineComponent({
-    setup() {
-        const [clipboard, setClipboard] = useClipboard();
+const useStore = create<BearState>(set => ({
+  bears: 0,
+  increase: () => set(state => ({ bears: state.bears + 1 }))
+}))
 
-        return {
-            clipboard,
-            setClipboard
-        }
-    }
-});
-</script>
+function BearCounter() {
+  const state = useStore()
+  return <h1>{state.bears} around here ...</h1>
+}
+
+function Controls() {
+  const state = useStore()
+  return (
+    <>
+      <button onClick={state.increase}>one up</button>
+      {/* Or */}
+      <button onClick={() => useStore.setState((prev) => ({ bears: prev.bears + 1 }))}>
+        one up
+      </button>
+    </>
+  )
+}
 ```
+
+## Selecting multiple state slices
+
+```ts
+const bears = useStore(state => state.bears)
+const bulls = useStore(state => state.bulls)
+```
+
+Multiple state-picks also works
+
+```ts
+import { shallow } from 'vue-zustand'
+
+// Object pick, either state.bears or state.bulls change
+const { bears, bulls } = useStore(state => ({ bears: state.bears, bulls: state.bulls }), shallow)
+
+// Array pick, either state.bears or state.bulls change
+const [bears, bulls] = useStore(state => [state.bears, state.bulls], shallow)
+```
+
+## License
+
+MIT License © 2021 [Robert Soriano](https://github.com/wobsoriano)
