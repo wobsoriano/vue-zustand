@@ -10,7 +10,8 @@ yarn add vue-zustand
 
 ## Example
 
-```jsx
+```ts
+// store.ts
 import create from 'vue-zustand'
 
 interface BearState {
@@ -18,28 +19,24 @@ interface BearState {
   increase: () => void
 }
 
-const useStore = create<BearState>(set => ({
+export const useStore = create<BearState>(set => ({
   bears: 0,
   increase: () => set(state => ({ bears: state.bears + 1 }))
 }))
+```
 
-function BearCounter() {
-  const state = useStore()
-  return <h1>{state.bears} around here ...</h1>
-}
+```html
+<!-- Component.vue -->
+<template>
+    <h1>{{ state.bears }} around here ...</h1>
+    <button @click="state.increase">one up</button>
+</template>
 
-function Controls() {
-  const state = useStore()
-  return (
-    <>
-      <button onClick={state.increase}>one up</button>
-      {/* Or */}
-      <button onClick={() => useStore.setState((prev) => ({ bears: prev.bears + 1 }))}>
-        one up
-      </button>
-    </>
-  )
-}
+<script setup lang="ts">
+import { useStore } from './store'
+
+const state = useStore()
+</script>
 ```
 
 ## Selecting multiple state slices
