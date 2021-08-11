@@ -1,5 +1,5 @@
 
-import { onUnmounted, shallowRef } from 'vue-demi';
+import { onUnmounted, shallowRef, Ref } from 'vue-demi';
 import createImpl, {
   StateCreator,
   SetState,
@@ -34,7 +34,7 @@ export default function create<TState extends State>(
   const useStore: any = <StateSlice>(
     selector: StateSelector<TState, StateSlice> = api.getState as any,
     equalityFn: EqualityChecker<StateSlice> = Object.is
-  ) => {
+  ): Ref<StateSlice> => {
     const initialValue = selector(api.getState())
     const state = shallowRef(initialValue);
     const unsubscribe = api.subscribe((newState) => {
