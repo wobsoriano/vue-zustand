@@ -105,4 +105,4 @@ export const useStore = create((set) => ({
 
 ## License
 
-MIT License © 2021 [Robert Soriano](https://github.com/wobsoriano)
+MIT License © 2022 [Robert Soriano](https://github.com/wobsoriano)
