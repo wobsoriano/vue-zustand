@@ -1,50 +1,67 @@
-
-import { onUnmounted, shallowRef, Ref } from 'vue-demi';
+import { onUnmounted, ref, Ref } from 'vue'
 import createImpl, {
   StateCreator,
   SetState,
   State,
   StoreApi,
   GetState,
-  Subscribe,
-  Destroy,
   StateSelector,
   EqualityChecker,
-} from 'zustand/vanilla';
+} from 'zustand/vanilla'
 
-export interface UseStore<T extends State> {
-  (): T;
-  <U>(selector: StateSelector<T, U>, equalityFn?: EqualityChecker<U>): U;
-  setState: SetState<T>;
-  getState: GetState<T>;
-  subscribe: Subscribe<T>;
-  destroy: Destroy;
-}
+export type UseBoundStore<
+  T extends State,
+  CustomStoreApi extends StoreApi<T> = StoreApi<T>
+> = {
+  (): Ref<T>
+  <U>(selector: StateSelector<T, U>, equalityFn?: EqualityChecker<U>): Ref<U>
+} & CustomStoreApi
 
-export {
-  default as shallow
-} from 'zustand/shallow';
-
-export default function create<TState extends State>(
-  createState: StateCreator<TState> | StoreApi<TState>
-): UseStore<TState> {
+export default function create<
+  TState extends State,
+  CustomSetState = SetState<TState>,
+  CustomGetState = GetState<TState>,
+  CustomStoreApi extends StoreApi<TState> = StoreApi<TState>
+>(
+  createState:
+    | StateCreator<TState, CustomSetState, CustomGetState, CustomStoreApi>
+    | CustomStoreApi
+): UseBoundStore<TState, CustomStoreApi> {
   const api: StoreApi<TState> =
-    typeof createState === 'function' ? createImpl(createState) : createState;
+    typeof createState === 'function' ? createImpl(createState) : createState
 
   const useStore: any = <StateSlice>(
     selector: StateSelector<TState, StateSlice> = api.getState as any,
     equalityFn: EqualityChecker<StateSlice> = Object.is
-  ): Ref<StateSlice> => {
+  ) => {
     const initialValue = selector(api.getState())
-    const state = shallowRef(initialValue);
-    const unsubscribe = api.subscribe((newState) => {
-      state.value = newState;
-    }, selector, equalityFn);
-    onUnmounted(() => unsubscribe());
-    return state;
+    const state = ref(initialValue)
+
+    const listener = () => {
+      const nextState = api.getState()
+      const nextStateSlice = selector(nextState)
+
+      try {
+        if (!equalityFn(state.value as StateSlice, nextStateSlice)) {
+          // @ts-ignore
+          state.value = nextStateSlice
+        }
+      } catch (e) {
+        // @ts-ignore
+        state.value = nextStateSlice
+      }
+    }
+
+    const unsubscribe = api.subscribe(listener)
+
+    onUnmounted(() => {
+      unsubscribe()
+    })
+
+    return state
   }
 
-  Object.assign(useStore, api);
+  Object.assign(useStore, api)
 
-  return useStore;
+  return useStore
 }
