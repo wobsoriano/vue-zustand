@@ -1,6 +1,6 @@
 # vue-zustand
 
-State-management solution for for Vue based on [zustand](https://github.com/pmndrs/zustand).
+State-management solution for Vue based on [zustand](https://github.com/pmndrs/zustand).
 
 ## Install
 
