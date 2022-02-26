@@ -5,7 +5,7 @@ State-management solution for Vue based on [zustand](https://github.com/pmndrs/z
 ## Install
 
 ```sh
-pnpm add vue-zustand
+pnpm add zustand vue-zustand
 ```
 
 ## Example
