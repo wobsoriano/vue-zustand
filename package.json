@@ -14,9 +14,11 @@
     "build-fast": "tsup src/index.ts --format esm,cjs",
     "build": "pnpm run build-fast -- --dts-resolve",
     "test": "vitest run",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "husky": "^7.0.4",
     "tsup": "^5.11.13",
     "typescript": "^4.3.5",
     "vitest": "^0.5.9"
@@ -30,8 +32,8 @@
   },
   "homepage": "https://github.com/wobsoriano/vue-zustand#readme",
   "dependencies": {
-    "vue": "^3.2.31",
-    "zustand": "^3.7.1"
+    "vue": ">=3.2.0",
+    "zustand": ">=3.6.0"
   },
   "peerDependencies": {
     "vue": ">=3.2.0",

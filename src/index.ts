@@ -1,4 +1,4 @@
-import { onUnmounted, ref, Ref } from 'vue'
+import { onUnmounted, ref, getCurrentInstance, Ref } from 'vue'
 import createImpl, {
   StateCreator,
   SetState,
@@ -54,9 +54,11 @@ export default function create<
 
     const unsubscribe = api.subscribe(listener)
 
-    onUnmounted(() => {
-      unsubscribe()
-    })
+    if (getCurrentInstance()) {
+      onUnmounted(() => {
+        unsubscribe()
+      })
+    }
 
     return state
   }

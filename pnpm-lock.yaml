@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  husky: ^7.0.4
   tsup: ^5.11.13
   typescript: ^4.3.5
   vitest: ^0.5.9
@@ -12,6 +13,7 @@ dependencies:
   zustand: 3.7.1
 
 devDependencies:
+  husky: 7.0.4
   tsup: 5.11.13_typescript@4.5.5
   typescript: 4.5.5
   vitest: 0.5.9
@@ -583,6 +585,12 @@ packages:
   /human-signals/2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
+    dev: true
+
+  /husky/7.0.4:
+    resolution: {integrity: sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==}
+    engines: {node: '>=12'}
+    hasBin: true
     dev: true
 
   /ignore/5.2.0:
