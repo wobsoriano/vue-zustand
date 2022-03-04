@@ -1,7 +1,9 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@egoist/prettier-config': ^1.0.0
   husky: ^7.0.4
+  prettier: ^2.5.1
   tsup: ^5.11.13
   typescript: ^4.3.5
   vitest: ^0.5.9
@@ -13,7 +15,9 @@ dependencies:
   zustand: 3.7.1
 
 devDependencies:
+  '@egoist/prettier-config': 1.0.0
   husky: 7.0.4
+  prettier: 2.5.1
   tsup: 5.11.13_typescript@4.5.5
   typescript: 4.5.5
   vitest: 0.5.9
@@ -25,6 +29,10 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
     dev: false
+
+  /@egoist/prettier-config/1.0.0:
+    resolution: {integrity: sha512-D1Tp9Jv4aVoEo3cOAO966gFCI0wx/1lZ6sEHX8uMAfyVxuxD2+knGxhfGlb/FNLxWV3ifSI5hOmB/zFfsi7Rzw==}
+    dev: true
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -815,6 +823,12 @@ packages:
       nanoid: 3.3.1
       picocolors: 1.0.0
       source-map-js: 1.0.2
+
+  /prettier/2.5.1:
+    resolution: {integrity: sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
+    dev: true
 
   /queue-microtask/1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}

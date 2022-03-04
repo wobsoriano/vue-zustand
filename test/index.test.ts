@@ -1,5 +1,5 @@
-import create from '../src'
-import { test, expect } from 'vitest'
+import create from "../src"
+import { test, expect } from "vitest"
 
 interface BearState {
   bears: number
@@ -13,14 +13,14 @@ const useStore = create<BearState>((set) => ({
   decrease: () => set((state) => ({ bears: state.bears - 1 })),
 }))
 
-test('returns default zustand properties', () => {
-  expect(typeof useStore.setState).toBe('function')
-  expect(typeof useStore.getState).toBe('function')
-  expect(typeof useStore.subscribe).toBe('function')
-  expect(typeof useStore.destroy).toBe('function')
+test("returns default zustand properties", () => {
+  expect(typeof useStore.setState).toBe("function")
+  expect(typeof useStore.getState).toBe("function")
+  expect(typeof useStore.subscribe).toBe("function")
+  expect(typeof useStore.destroy).toBe("function")
 })
 
-test('increments', () => {
+test("increments", () => {
   const bears = useStore((state) => state.bears)
   const increase = useStore((state) => state.increase)
   expect(bears.value).toBe(0)
@@ -29,7 +29,7 @@ test('increments', () => {
   expect(bears.value).toBe(2)
 })
 
-test('decrements', () => {
+test("decrements", () => {
   const bears = useStore((state) => state.bears)
   const decrease = useStore((state) => state.decrease)
   decrease.value()

@@ -15,10 +15,14 @@
     "build": "pnpm run build-fast -- --dts-resolve",
     "test": "vitest run",
     "prepublishOnly": "pnpm run build",
+    "format": "prettier --write src test",
+    "lint": "prettier --check src test",
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@egoist/prettier-config": "^1.0.0",
     "husky": "^7.0.4",
+    "prettier": "^2.5.1",
     "tsup": "^5.11.13",
     "typescript": "^4.3.5",
     "vitest": "^0.5.9"
@@ -39,8 +43,5 @@
     "vue": ">=3.2.0",
     "zustand": ">=3.6.0"
   },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true
-  }
+  "prettier": "@egoist/prettier-config"
 }
