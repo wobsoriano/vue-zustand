@@ -2,7 +2,7 @@
   "name": "vue-zustand",
   "description": "🐻 Bear necessities for Vue.",
   "license": "MIT",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "exports": {
