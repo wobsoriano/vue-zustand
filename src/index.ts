@@ -1,13 +1,15 @@
-import { onUnmounted, ref, getCurrentInstance, Ref } from "vue"
-import createImpl, {
-  StateCreator,
+import type { Ref } from 'vue'
+import { getCurrentInstance, onUnmounted, ref } from 'vue'
+import type {
+  EqualityChecker,
+  GetState,
   SetState,
   State,
-  StoreApi,
-  GetState,
+  StateCreator,
   StateSelector,
-  EqualityChecker,
-} from "zustand/vanilla"
+  StoreApi,
+} from 'zustand/vanilla'
+import createImpl from 'zustand/vanilla'
 
 export type UseBoundStore<
   T extends State,
@@ -24,11 +26,11 @@ export default function create<
   CustomStoreApi extends StoreApi<TState> = StoreApi<TState>,
 >(
   createState:
-    | StateCreator<TState, CustomSetState, CustomGetState, CustomStoreApi>
-    | CustomStoreApi,
+  | StateCreator<TState, CustomSetState, CustomGetState, CustomStoreApi>
+  | CustomStoreApi,
 ): UseBoundStore<TState, CustomStoreApi> {
-  const api: StoreApi<TState> =
-    typeof createState === "function" ? createImpl(createState) : createState
+  const api: StoreApi<TState>
+    = typeof createState === 'function' ? createImpl(createState) : createState
 
   const useStore: any = <StateSlice>(
     selector: StateSelector<TState, StateSlice> = api.getState as any,
@@ -43,11 +45,12 @@ export default function create<
 
       try {
         if (!equalityFn(state.value as StateSlice, nextStateSlice)) {
-          // @ts-ignore
+          // @ts-expect-error: Incompatible types
           state.value = nextStateSlice
         }
-      } catch (e) {
-        // @ts-ignore
+      }
+      catch (e) {
+        // @ts-expect-error: Incompatible types
         state.value = nextStateSlice
       }
     }
