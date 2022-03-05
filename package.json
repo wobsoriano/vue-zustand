@@ -14,12 +14,14 @@
     "build-fast": "tsup src/index.ts --format esm,cjs",
     "build": "pnpm run build-fast -- --dts-resolve",
     "test": "vitest run",
+    "release": "bumpp --commit --push --tag && pnpm publish",
     "prepublishOnly": "pnpm run build",
     "lint": "eslint \"**/*.{ts,js}\"",
     "prepare": "husky install"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.16.1",
+    "bumpp": "^7.1.1",
     "eslint": "^8.10.0",
     "husky": "^7.0.4",
     "tsup": "^5.11.13",
