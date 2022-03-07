@@ -11,7 +11,7 @@
   },
   "types": "dist/index.d.ts",
   "scripts": {
-    "build-fast": "tsup src/index.ts --format esm,cjs",
+    "build-fast": "tsup src/index.ts --format esm,cjs --external zustand/vanilla",
     "build": "pnpm run build-fast -- --dts-resolve",
     "test": "vitest run",
     "release": "bumpp --commit --push --tag && pnpm publish",
