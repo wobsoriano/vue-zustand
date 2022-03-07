@@ -40,13 +40,21 @@
     "zustand": "^3.7.1"
   },
   "peerDependencies": {
-    "vue": ">=3.2.0",
-    "zustand": ">=3.6.0"
+    "vue": "^3.2.0",
+    "zustand": "^3.6.0"
   },
   "eslintConfig": {
     "extends": "@antfu"
   },
   "eslintIgnore": [
     "dist"
-  ]
+  ],
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.{js,ts}": [
+      "eslint --fix"
+    ]
+  }
 }
