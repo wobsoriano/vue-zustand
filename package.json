@@ -1,14 +1,21 @@
 {
   "name": "vue-zustand",
+  "version": "0.1.8",
   "description": "🐻 Bear necessities for Vue.",
   "license": "MIT",
-  "version": "0.1.8",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wobsoriano/vue-zustand.git"
+  },
+  "files": [
+    "dist"
+  ],
   "exports": {
     "require": "./dist/index.js",
     "import": "./dist/index.mjs"
   },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "build-fast": "tsup src/index.ts --format esm,cjs --external zustand/vanilla",
@@ -16,6 +23,19 @@
     "test": "vitest run",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "prepublishOnly": "pnpm run build"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.{js,ts}": [
+      "eslint --fix"
+    ]
+  },
+  "peerDependencies": {
+    "vue": "^3.2.0",
+    "zustand": "^3.6.0"
+  },
+  "dependencies": {
+    "vue": "^3.2.31",
+    "zustand": "^3.7.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.16.1",
@@ -27,22 +47,7 @@
     "typescript": "^4.3.5",
     "vitest": "^0.5.9"
   },
-  "files": [
-    "dist"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/wobsoriano/vue-zustand.git"
-  },
   "homepage": "https://github.com/wobsoriano/vue-zustand#readme",
-  "dependencies": {
-    "vue": "^3.2.31",
-    "zustand": "^3.7.1"
-  },
-  "peerDependencies": {
-    "vue": "^3.2.0",
-    "zustand": "^3.6.0"
-  },
   "eslintConfig": {
     "extends": "@antfu"
   },
@@ -51,10 +56,5 @@
   ],
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
-  },
-  "lint-staged": {
-    "{src,test}/**/*.{js,ts}": [
-      "eslint --fix"
-    ]
   }
 }
