@@ -7,16 +7,16 @@
     "type": "git",
     "url": "git+https://github.com/wobsoriano/vue-zustand.git"
   },
-  "files": [
-    "dist"
-  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "exports": {
     "require": "./dist/index.js",
     "import": "./dist/index.mjs"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build-fast": "tsup src/index.ts --format esm,cjs --external zustand/vanilla",
     "build": "pnpm run build-fast -- --dts-resolve",
@@ -26,11 +26,6 @@
     "prepublishOnly": "pnpm run build",
     "lint": "eslint --ext=js,ts .",
     "lint:fix": "eslint --ext=js,ts . --fix"
-  },
-  "lint-staged": {
-    "{src,test}/**/*.{js,ts}": [
-      "eslint --fix"
-    ]
   },
   "peerDependencies": {
     "vue": "^3.2.0",
@@ -51,6 +46,11 @@
     "tsup": "^5.12.1",
     "typescript": "^4.3.5",
     "vitest": "^0.6.0"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.{js,ts}": [
+      "eslint --fix"
+    ]
   },
   "homepage": "https://github.com/wobsoriano/vue-zustand#readme",
   "eslintConfig": {
