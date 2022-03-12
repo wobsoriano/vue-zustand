@@ -49,10 +49,7 @@ export default function create<
           state.value = nextStateSlice
         }
       }
-      catch (e) {
-        // @ts-expect-error: Incompatible types
-        state.value = nextStateSlice
-      }
+      catch (e) {}
     }
 
     const unsubscribe = api.subscribe(listener)
