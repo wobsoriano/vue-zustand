@@ -46,19 +46,18 @@ const bears = useStore(state => state.bears)
 const bulls = useStore(state => state.bulls)
 ```
 
-Multiple state-picks also works
+Multiple state-picks
 
 ```ts
 import shallow from 'zustand/shallow'
 
-// Object pick, either state.bears or state.bulls change
-const { bears, bulls } = useStore(
+// Either state.bears or state.bulls change
+const state = useStore(
   state => ({ bears: state.bears, bulls: state.bulls }),
   shallow,
 )
 
-// Array pick, either state.bears or state.bulls change
-const [bears, bulls] = useStore(state => [state.bears, state.bulls], shallow)
+// state is a ref so destructuring won't work.
 ```
 
 ## Suspense
