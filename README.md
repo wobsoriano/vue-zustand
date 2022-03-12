@@ -67,9 +67,7 @@ const state = useStore(
 export const useStore = create(set => ({
   user: {},
   fetchUser: async(id) => {
-    const response = await fetch(
-      `https://jsonplaceholder.typicode.com/users/${id}`,
-    )
+    const response = await fetch(`/api/users/${id}`)
     set({ user: await response.json() })
   },
 }))
