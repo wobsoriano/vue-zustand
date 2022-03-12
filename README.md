@@ -19,9 +19,9 @@ interface BearState {
   increase: () => void
 }
 
-export const useStore = create<BearState>((set) => ({
+export const useStore = create<BearState>(set => ({
   bears: 0,
-  increase: () => set((state) => ({ bears: state.bears + 1 })),
+  increase: () => set(state => ({ bears: state.bears + 1 })),
 }))
 ```
 
@@ -42,8 +42,8 @@ export const useStore = create<BearState>((set) => ({
 ## Selecting multiple state slices
 
 ```ts
-const bears = useStore((state) => state.bears)
-const bulls = useStore((state) => state.bulls)
+const bears = useStore(state => state.bears)
+const bulls = useStore(state => state.bulls)
 ```
 
 Multiple state-picks also works
@@ -53,23 +53,23 @@ import shallow from 'zustand/shallow'
 
 // Object pick, either state.bears or state.bulls change
 const { bears, bulls } = useStore(
-  (state) => ({ bears: state.bears, bulls: state.bulls }),
-  shallow
+  state => ({ bears: state.bears, bulls: state.bulls }),
+  shallow,
 )
 
 // Array pick, either state.bears or state.bulls change
-const [bears, bulls] = useStore((state) => [state.bears, state.bulls], shallow)
+const [bears, bulls] = useStore(state => [state.bears, state.bulls], shallow)
 ```
 
 ## Suspense
 
 ```ts
 // store.ts
-export const useStore = create((set) => ({
+export const useStore = create(set => ({
   user: {},
-  fetchUser: async (id) => {
+  fetchUser: async(id) => {
     const response = await fetch(
-      `https://jsonplaceholder.typicode.com/users/${id}`
+      `https://jsonplaceholder.typicode.com/users/${id}`,
     )
     set({ user: await response.json() })
   },
