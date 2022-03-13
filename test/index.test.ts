@@ -29,9 +29,7 @@ describe('create', () => {
   it('functions correct when rendering in vue', async() => {
     const App = defineComponent({
       setup() {
-        const { count, increase, decrease } = useCounterStore()
-
-        return { count, increase, decrease }
+        return useCounterStore()
       },
       template: `
         <div>
@@ -82,33 +80,31 @@ describe('create', () => {
     expect(wrapper.get('[data-test="count"]').text()).toBe('1')
   })
 
-  // it('allows multiple state slices by array', async() => {
-  //   const App = defineComponent({
-  //     setup() {
-  //       const [count, increase] = useCounterStore(
-  //         state => [state.count, state.increase],
-  //         shallow,
-  //       )
+  it('allows multiple state slices by array', async() => {
+    const App = defineComponent({
+      setup() {
+        const [count, increase] = useCounterStore(
+          state => [state.count, state.increase],
+          shallow,
+        )
 
-  //       console.log(count)
+        return {
+          count,
+          increase,
+        }
+      },
+      template: `
+        <div>
+          <div data-test="count">{{ count }}</div>
+          <button data-test="inc" @click="increase">+</button>
+        </div>
+      `,
+    })
 
-  //       return {
-  //         count,
-  //         increase,
-  //       }
-  //     },
-  //     template: `
-  //       <div>
-  //         <div data-test="count">{{ count }}</div>
-  //         <button data-test="inc" @click="increase">+</button>
-  //       </div>
-  //     `,
-  //   })
-
-  //   const wrapper = mount(App)
-  //   expect(wrapper.get('[data-test="count"]').text()).toBe('0')
-  //   wrapper.get('[data-test="inc"]').trigger('click')
-  //   await nextTick()
-  //   expect(wrapper.get('[data-test="count"]').text()).toBe('1')
-  // })
+    const wrapper = mount(App)
+    expect(wrapper.get('[data-test="count"]').text()).toBe('0')
+    wrapper.get('[data-test="inc"]').trigger('click')
+    await nextTick()
+    expect(wrapper.get('[data-test="count"]').text()).toBe('1')
+  })
 })

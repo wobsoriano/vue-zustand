@@ -59,9 +59,7 @@ export default function create<
       })
     }
 
-    return {
-      ...toRefs(readonly(state)),
-    }
+    return toRefs(readonly(state))
   }
 
   Object.assign(useStore, api)
