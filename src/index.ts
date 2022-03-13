@@ -1,5 +1,5 @@
-import type { Ref } from 'vue'
-import { getCurrentInstance, onUnmounted, ref } from 'vue'
+import type { ToRefs } from 'vue'
+import { getCurrentInstance, onUnmounted, reactive, readonly, toRefs } from 'vue'
 import type {
   EqualityChecker,
   GetState,
@@ -10,13 +10,14 @@ import type {
   StoreApi,
 } from 'zustand/vanilla'
 import createImpl from 'zustand/vanilla'
+import { updateState } from './utils'
 
 type UseBoundStore<
   T extends State,
   CustomStoreApi extends StoreApi<T> = StoreApi<T>,
 > = {
-  (): Ref<T>
-  <U>(selector: StateSelector<T, U>, equalityFn?: EqualityChecker<U>): Ref<U>
+  (): ToRefs<T>
+  <U>(selector: StateSelector<T, U>, equalityFn?: EqualityChecker<U>): ToRefs<U>
 } & CustomStoreApi
 
 export default function create<
@@ -37,17 +38,15 @@ export default function create<
     equalityFn: EqualityChecker<StateSlice> = Object.is,
   ) => {
     const initialValue = selector(api.getState())
-    const state = ref(initialValue)
+    const state = reactive(initialValue as Record<any, any>)
 
     const listener = () => {
       const nextState = api.getState()
       const nextStateSlice = selector(nextState)
 
       try {
-        if (!equalityFn(state.value as StateSlice, nextStateSlice)) {
-          // @ts-expect-error: Incompatible types
-          state.value = nextStateSlice
-        }
+        if (!equalityFn(state, nextStateSlice))
+          updateState(state, nextStateSlice)
       }
       catch (e) {}
     }
@@ -60,7 +59,9 @@ export default function create<
       })
     }
 
-    return state
+    return {
+      ...toRefs(readonly(state)),
+    }
   }
 
   Object.assign(useStore, api)
