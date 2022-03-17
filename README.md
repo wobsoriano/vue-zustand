@@ -31,6 +31,9 @@ export const useStore = create<BearState>(set => ({
   import { useStore } from './store'
 
   const state = useStore()
+
+  // state.value.bears
+  // state.value.increase()
 </script>
 
 <template>
