@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import shallow from 'zustand/shallow'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, nextTick } from 'vue'
-import create from '../src'
+import create from '..'
 
 describe('create', () => {
   it('returns default zustand properties', () => {
@@ -56,7 +56,8 @@ describe('create', () => {
     const useStore = create<BearState>(set => ({
       bears: 0,
       bulls: 0,
-      increase: () => set(state => ({ bears: state.bears + 1, bulls: state.bulls + 1 })),
+      increase: () =>
+        set(state => ({ bears: state.bears + 1, bulls: state.bulls + 1 })),
     }))
 
     const App = defineComponent({
