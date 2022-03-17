@@ -45,8 +45,8 @@ export const useStore = create<BearState>(set => ({
 ## Selecting multiple state slices
 
 ```ts
-const bears = useStore(state => state.bears)
-const bulls = useStore(state => state.bulls)
+const bears = useStore(state => state.bears) // bears.value
+const bulls = useStore(state => state.bulls) // bulls.value
 ```
 
 Multiple state-picks
