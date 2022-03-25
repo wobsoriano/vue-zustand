@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils'
 import shallow from 'zustand/shallow'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, nextTick } from 'vue'
-import create from '..'
+import create from '../index'
 
 describe('create', () => {
   it('returns default zustand properties', () => {
@@ -23,13 +23,15 @@ describe('create', () => {
 
     const App = defineComponent({
       setup() {
-        return { state: useStore() }
+        return {
+          ...useStore(),
+        }
       },
       template: `
         <div>
-          <div data-test="bears">{{ state.bears }}</div>
-          <button data-test="inc" @click="state.increase">+</button>
-          <button data-test="dec" @click="state.decrease">-</button>
+          <div data-test="bears">{{ bears }}</div>
+          <button data-test="inc" @click="increase">+</button>
+          <button data-test="dec" @click="decrease">-</button>
         </div>
       `,
     })
@@ -62,25 +64,25 @@ describe('create', () => {
 
     const App = defineComponent({
       setup() {
-        const state = useStore(
+        const {
+          bears,
+          increase,
+        } = useStore(
           state => ({ bears: state.bears, increase: state.increase }),
           shallow,
         )
-
-        return { state }
+        return { bears, increase }
       },
       template: `
         <div>
-          <div data-test="bears">{{ state.bears }}</div>
-          <div data-test="bulls">{{ state.bulls }}</div>
-          <button data-test="inc" @click="state.increase">+</button>
+          <div data-test="bears">{{ bears }}</div>
+          <button data-test="inc" @click="increase">+</button>
         </div>
       `,
     })
 
     const wrapper = mount(App)
     expect(wrapper.get('[data-test="bears"]').text()).toBe('0')
-    expect(wrapper.get('[data-test="bulls"]').text()).toBe('')
     wrapper.get('[data-test="inc"]').trigger('click')
     await nextTick()
     expect(wrapper.get('[data-test="bears"]').text()).toBe('1')
