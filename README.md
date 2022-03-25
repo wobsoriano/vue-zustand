@@ -30,15 +30,15 @@ export const useStore = create<BearState>(set => ({
 <script setup lang="ts">
   import { useStore } from './store'
 
-  const state = useStore()
+  const { bears, increase } = useStore()
 
-  // state.value.bears
-  // state.value.increase()
+  // bears.value
+  // increase.value()
 </script>
 
 <template>
-  <h1>{{ state.bears }} around here ...</h1>
-  <button @click="state.increase">one up</button>
+  <h1>{{ bears }} around here ...</h1>
+  <button @click="increase">one up</button>
 </template>
 ```
 
@@ -49,18 +49,19 @@ const bears = useStore(state => state.bears) // bears.value
 const bulls = useStore(state => state.bulls) // bulls.value
 ```
 
-Multiple state-picks
+If you want to construct a single object with multiple state-picks inside, similar to redux's mapStateToProps, you can tell zustand that you want the object to be diffed shallowly by passing the `shallow` equality function.
 
 ```ts
 import shallow from 'zustand/shallow'
 
-// Either state.bears or state.bulls change
-const state = useStore(
+// Object pick, updates either state.bears or state.bulls change
+const { bears, bulls } = useStore(
   state => ({ bears: state.bears, bulls: state.bulls }),
   shallow,
 )
 
-// state is a ref so destructuring won't work.
+// Array pick, updates either state.bears or state.bulls change
+const [bears, bulls] = useStore(state => [state.bears, state.bulls], shallow)
 ```
 
 ## Suspense

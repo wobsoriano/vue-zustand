@@ -1,4 +1,3 @@
-import type { ToRefs } from 'vue'
 import { getCurrentInstance, onUnmounted, ref, toRefs } from 'vue'
 import type {
   EqualityChecker,
@@ -10,14 +9,15 @@ import type {
   StoreApi,
 } from 'zustand/vanilla'
 import createZustandStore from 'zustand/vanilla'
-import { refToReactive } from './util'
+import type { IsPrimitive } from './util'
+import { isPrimitive, refToReactive } from './util'
 
 type UseBoundStore<
   T extends State,
   CustomStoreApi extends StoreApi<T> = StoreApi<T>,
 > = {
-  (): ToRefs<T>
-  <U>(selector: StateSelector<T, U>, equalityFn?: EqualityChecker<U>): ToRefs<U>
+  (): IsPrimitive<T>
+  <U>(selector: StateSelector<T, U>, equalityFn?: EqualityChecker<U>): IsPrimitive<U>
 } & CustomStoreApi
 
 function create<
@@ -78,7 +78,7 @@ function create<
       })
     }
 
-    return toRefs(refToReactive(state) as Record<any, any>)
+    return isPrimitive(state.value) ? state : toRefs(refToReactive(state) as Record<any, any>)
   }
 
   Object.assign(useStore, api)

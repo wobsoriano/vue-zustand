@@ -71,7 +71,6 @@ describe('create', () => {
           state => ({ bears: state.bears, increase: state.increase }),
           shallow,
         )
-
         return { bears, increase }
       },
       template: `
