@@ -1,4 +1,4 @@
-import { getCurrentInstance, onUnmounted, ref, toRefs } from 'vue'
+import { getCurrentInstance, onUnmounted, readonly, ref, toRefs } from 'vue'
 import type {
   EqualityChecker,
   GetState,
@@ -78,7 +78,7 @@ function create<
       })
     }
 
-    return isPrimitive(state.value) ? state : toRefs(refToReactive(state) as Record<any, any>)
+    return isPrimitive(state.value) ? readonly(state) : toRefs(refToReactive(state) as Record<any, any>)
   }
 
   Object.assign(useStore, api)
