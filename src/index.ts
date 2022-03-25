@@ -1,4 +1,4 @@
-import { getCurrentInstance, onUnmounted, readonly, ref, toRefs } from 'vue'
+import { getCurrentInstance, onUnmounted, readonly, ref, toRefs, unref } from 'vue'
 import type {
   EqualityChecker,
   GetState,
@@ -62,7 +62,7 @@ function create<
       const nextStateSlice = selector(nextState)
 
       try {
-        if (!equalityFn(state.value as StateSlice, nextStateSlice)) {
+        if (!equalityFn(unref(state) as StateSlice, nextStateSlice)) {
           // @ts-expect-error: Incompatible types
           state.value = nextStateSlice
         }
