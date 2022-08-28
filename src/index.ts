@@ -1,89 +1,90 @@
-import { getCurrentInstance, onUnmounted, readonly, ref, toRefs, unref } from 'vue'
+import type { UnwrapRef } from 'vue'
+import { getCurrentInstance, onUnmounted, readonly, ref, toRefs } from 'vue'
+
 import type {
-  EqualityChecker,
-  GetState,
-  SetState,
-  State,
+  Mutate,
   StateCreator,
-  StateSelector,
   StoreApi,
+  StoreMutatorIdentifier,
 } from 'zustand/vanilla'
 import createZustandStore from 'zustand/vanilla'
 import type { IsPrimitive } from './util'
 import { isPrimitive, refToReactive } from './util'
 
-type UseBoundStore<
-  T extends State,
-  CustomStoreApi extends StoreApi<T> = StoreApi<T>,
-> = {
-  (): IsPrimitive<T>
-  <U>(selector: StateSelector<T, U>, equalityFn?: EqualityChecker<U>): IsPrimitive<U>
-} & CustomStoreApi
+type ExtractState<S> = S extends { getState: () => infer T } ? T : never
 
-function create<
-  TState extends State,
-  CustomSetState,
-  CustomGetState,
-  CustomStoreApi extends StoreApi<TState>,
->(
-  createState:
-  | StateCreator<TState, CustomSetState, CustomGetState, CustomStoreApi>
-  | CustomStoreApi
-): UseBoundStore<TState, CustomStoreApi>
+export function useStore<S extends StoreApi<unknown>>(api: S): ExtractState<S>
 
-function create<TState extends State>(
-  createState:
-  | StateCreator<TState, SetState<TState>, GetState<TState>, any>
-  | StoreApi<TState>
-): UseBoundStore<TState, StoreApi<TState>>
+export function useStore<S extends StoreApi<unknown>, U>(
+  api: S,
+  selector: (state: ExtractState<S>) => U,
+  equalityFn?: (a: U, b: U) => boolean
+): U
 
-function create<
-  TState extends State,
-  CustomSetState,
-  CustomGetState,
-  CustomStoreApi extends StoreApi<TState>,
->(
-  createState:
-  | StateCreator<TState, CustomSetState, CustomGetState, CustomStoreApi>
-  | CustomStoreApi,
-): UseBoundStore<TState, CustomStoreApi> {
-  const api: CustomStoreApi
-    = typeof createState === 'function' ? createZustandStore(createState) : createState
+export function useStore<TState extends object, StateSlice>(
+  api: StoreApi<TState>,
+  selector: (state: TState) => StateSlice = api.getState as any,
+  equalityFn?: (a: StateSlice, b: StateSlice) => boolean,
+) {
+  const initialValue = selector(api.getState())
+  const state = ref(initialValue)
 
-  const useStore: any = <StateSlice>(
-    selector: StateSelector<TState, StateSlice> = api.getState as any,
-    equalityFn: EqualityChecker<StateSlice> = Object.is,
-  ) => {
-    const initialValue = selector(api.getState())
-    const state = ref(initialValue)
+  const listener = (nextState: TState, previousState: TState) => {
+    const prevStateSlice = selector(previousState)
+    const nextStateSlice = selector(nextState)
 
-    const listener = () => {
-      const nextState = api.getState()
-      const nextStateSlice = selector(nextState)
-
-      try {
-        if (!equalityFn(unref(state) as StateSlice, nextStateSlice)) {
-          // @ts-expect-error: Incompatible types
-          state.value = nextStateSlice
-        }
-      }
-      catch (e) {}
+    if (equalityFn !== undefined) {
+      if (!equalityFn(prevStateSlice, nextStateSlice))
+        state.value = nextStateSlice as UnwrapRef<StateSlice>
     }
-
-    const unsubscribe = api.subscribe(listener)
-
-    if (getCurrentInstance()) {
-      onUnmounted(() => {
-        unsubscribe()
-      })
+    else {
+      state.value = nextStateSlice as UnwrapRef<StateSlice>
     }
-
-    return isPrimitive(state.value) ? readonly(state) : toRefs(refToReactive(state) as Record<any, any>)
   }
 
-  Object.assign(useStore, api)
+  const unsubscribe = api.subscribe(listener)
 
-  return useStore
+  if (getCurrentInstance()) {
+    onUnmounted(() => {
+      unsubscribe()
+    })
+  }
+
+  return isPrimitive(state.value) ? readonly(state) : toRefs(refToReactive(state) as Record<any, any>)
 }
+
+export type UseBoundStore<S extends StoreApi<unknown>> = {
+  (): IsPrimitive<ExtractState<S>>
+  <U>(
+    selector: (state: ExtractState<S>) => U,
+    equals?: (a: U, b: U) => boolean
+  ): IsPrimitive<U>
+} & S
+
+interface Create {
+  <T, Mos extends [StoreMutatorIdentifier, unknown][] = []>(
+    initializer: StateCreator<T, [], Mos>
+  ): UseBoundStore<Mutate<StoreApi<T>, Mos>>
+  <T>(): <Mos extends [StoreMutatorIdentifier, unknown][] = []>(
+    initializer: StateCreator<T, [], Mos>
+  ) => UseBoundStore<Mutate<StoreApi<T>, Mos>>
+  <S extends StoreApi<unknown>>(store: S): UseBoundStore<S>
+}
+
+const createImpl = <T extends object>(createState: StateCreator<T, [], []>) => {
+  const api
+    = typeof createState === 'function' ? createZustandStore(createState) : createState
+
+  const useBoundStore: any = (selector?: any, equalityFn?: any) =>
+    useStore(api, selector, equalityFn)
+
+  Object.assign(useBoundStore, api)
+
+  return useBoundStore
+}
+
+const create = (<T extends object>(
+  createState: StateCreator<T, [], []> | undefined,
+) => (createState ? createImpl(createState) : createImpl)) as Create
 
 export default create

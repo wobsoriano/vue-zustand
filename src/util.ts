@@ -9,7 +9,7 @@ export function refToReactive<O, K extends keyof O>(
     Object.fromEntries(
       keys.map(key => [key, computed(() => result.value[key as K])]),
     ),
-  ) as O
+  ) as unknown as O
 }
 
 export function isPrimitive<T>(val: T): boolean {
