@@ -12,7 +12,7 @@ specifiers:
   typescript: ^4.6.3
   vitest: ^0.6.3
   vue: ^3.2.37
-  zustand: ^4.1.1
+  zustand: ^4.1.4
 
 devDependencies:
   '@antfu/eslint-config': 0.18.9_xvhqpdi633zzz6v3vex4a2hy5m
@@ -26,7 +26,7 @@ devDependencies:
   typescript: 4.8.2
   vitest: 0.6.3_jsdom@19.0.0
   vue: 3.2.37
-  zustand: 4.1.1
+  zustand: 4.1.4
 
 packages:
 
@@ -3860,8 +3860,8 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /zustand/4.1.1:
-    resolution: {integrity: sha512-h4F3WMqsZgvvaE0n3lThx4MM81Ls9xebjvrABNzf5+jb3/03YjNTSgZXeyrvXDArMeV9untvWXRw1tY+ntPYbA==}
+  /zustand/4.1.4:
+    resolution: {integrity: sha512-k2jVOlWo8p4R83mQ+/uyB8ILPO2PCJOf+QVjcL+1PbMCk1w5OoPYpAIxy9zd93FSfmJqoH6lGdwzzjwqJIRU5A==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       immer: '>=9.0'
