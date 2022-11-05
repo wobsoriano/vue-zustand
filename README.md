@@ -64,44 +64,28 @@ const { bears, bulls } = useStore(
 const [bears, bulls] = useStore(state => [state.bears, state.bulls], shallow)
 ```
 
-## Suspense
+## Nuxt
 
 ```ts
-// store.ts
-export const useStore = create(set => ({
-  user: {},
-  fetchUser: async(id) => {
-    const response = await fetch(`/api/users/${id}`)
-    set({ user: await response.json() })
-  },
-}))
-```
+import { defineNuxtPlugin } from '#app'
 
-```html
-<script setup lang="ts">
-  import { useStore } from './store'
+export default defineNuxtPlugin((nuxtApp) => {
+  if (process.server) {
+    nuxtApp.hooks.hook('app:rendered', () => {
+      const initialState = JSON.parse(JSON.stringify(useStore.getState()))
+      nuxtApp.payload.zustand = initialState
+    })
+  }
 
-  const user = useStore((state) => state.user)
-  const fetchUser = useStore((state) => state.fetchUser)
-  await fetchUser.value('1')
-</script>
-
-<template>
-  <div>{{ JSON.stringify(user, null, 2) }}</div>
-</template>
-```
-
-```html
-<script setup lang="ts">
-  import User from './components/User.vue'
-</script>
-
-<template>
-  <Suspense>
-    <User />
-    <template #fallback> Loading... </template>
-  </Suspense>
-</template>
+  if (process.client) {
+    nuxtApp.hooks.hook('app:created', () => {
+      useStore.setState({
+        ...useStore.getState(),
+        ...nuxtApp.payload.zustand,
+      })
+    })
+  }
+})
 ```
 
 ## License
