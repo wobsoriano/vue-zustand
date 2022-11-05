@@ -1,5 +1,5 @@
 import type { UnwrapRef } from 'vue'
-import { getCurrentInstance, onUnmounted, readonly, ref, toRefs } from 'vue'
+import { getCurrentInstance, onScopeDispose, readonly, ref, toRefs } from 'vue'
 
 import type {
   Mutate,
@@ -45,7 +45,7 @@ export function useStore<TState extends object, StateSlice>(
   const unsubscribe = api.subscribe(listener)
 
   if (getCurrentInstance()) {
-    onUnmounted(() => {
+    onScopeDispose(() => {
       unsubscribe()
     })
   }
