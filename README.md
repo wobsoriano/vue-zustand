@@ -67,8 +67,6 @@ const [bears, bulls] = useStore(state => [state.bears, state.bulls], shallow)
 ## Nuxt
 
 ```ts
-import { defineNuxtPlugin } from '#app'
-
 export default defineNuxtPlugin((nuxtApp) => {
   if (process.server) {
     nuxtApp.hooks.hook('app:rendered', () => {
