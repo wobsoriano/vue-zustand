@@ -7,7 +7,7 @@ import type {
   StoreApi,
   StoreMutatorIdentifier,
 } from 'zustand/vanilla'
-import createZustandStore from 'zustand/vanilla'
+import { createStore as createZustandStore } from 'zustand/vanilla'
 import type { IsPrimitive } from './util'
 import { isPrimitive, refToReactive } from './util'
 
