@@ -1,5 +1,6 @@
+/* eslint-disable vue/one-component-per-file */
 import { mount } from '@vue/test-utils'
-import shallow from 'zustand/shallow'
+import { shallow } from 'zustand/shallow'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, nextTick } from 'vue'
 import create from '../index'
