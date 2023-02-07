@@ -20,7 +20,7 @@
   ],
   "scripts": {
     "build-fast": "tsup src/index.ts --format esm,cjs --external zustand/vanilla",
-    "build": "pnpm run build-fast -- --dts-resolve",
+    "build": "pnpm run build-fast --dts-resolve",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "release": "bumpp --commit --push --tag && pnpm publish",
