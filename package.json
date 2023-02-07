@@ -47,9 +47,5 @@
   "homepage": "https://github.com/wobsoriano/vue-zustand#readme",
   "eslintConfig": {
     "extends": "@antfu"
-  },
-  "eslintIgnore": [
-    "dist",
-    "node_modules"
-  ]
+  }
 }
