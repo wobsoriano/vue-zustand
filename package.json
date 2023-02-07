@@ -29,26 +29,20 @@
   },
   "peerDependencies": {
     "vue": ">=3.2.0",
-    "zustand": ">=4.0.0"
+    "zustand": ">=4.3.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^0.18.9",
-    "@vue/test-utils": "^2.0.2",
-    "bumpp": "^7.1.1",
-    "eslint": "^8.11.0",
+    "@vue/test-utils": "^2.2.10",
+    "bumpp": "^7.2.0",
+    "eslint": "^8.33.0",
     "jsdom": "^19.0.0",
-    "lint-staged": "^12.3.5",
-    "simple-git-hooks": "^2.7.0",
-    "tsup": "^5.12.1",
-    "typescript": "^4.6.3",
+    "simple-git-hooks": "^2.8.1",
+    "tsup": "^5.12.9",
+    "typescript": "^4.9.5",
     "vitest": "^0.6.3",
-    "vue": "^3.2.37",
-    "zustand": "^4.1.4"
-  },
-  "lint-staged": {
-    "{src,test}/**/*.{js,ts}": [
-      "eslint --fix"
-    ]
+    "vue": "^3.2.47",
+    "zustand": "^4.3.2"
   },
   "homepage": "https://github.com/wobsoriano/vue-zustand#readme",
   "eslintConfig": {
@@ -57,8 +51,5 @@
   "eslintIgnore": [
     "dist",
     "node_modules"
-  ],
-  "simple-git-hooks": {
-    "pre-commit": "npx lint-staged"
-  }
+  ]
 }
