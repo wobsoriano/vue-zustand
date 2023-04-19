@@ -1,6 +1,8 @@
 # vue-zustand
 
-State-management solution for Vue based on [zustand](https://github.com/pmndrs/zustand).
+State-management solution for Vue 3 based on [zustand](https://github.com/pmndrs/zustand).
+
+Vue 2 users can use [this solution](https://gist.github.com/Zikoat/ec47ff3646f889d09f8c6d350e6060f6).
 
 ## Install
 
