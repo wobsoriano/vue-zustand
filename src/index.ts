@@ -1,5 +1,6 @@
 import type { UnwrapRef } from 'vue'
 import { getCurrentInstance, onScopeDispose, readonly, ref, toRefs } from 'vue'
+import { toReactive } from '@vueuse/core'
 
 import type {
   Mutate,
@@ -9,7 +10,7 @@ import type {
 } from 'zustand/vanilla'
 import { createStore as createZustandStore } from 'zustand/vanilla'
 import type { IsPrimitive } from './util'
-import { isPrimitive, refToReactive } from './util'
+import { isPrimitive } from './util'
 
 type ExtractState<S> = S extends { getState: () => infer T } ? T : never
 
@@ -50,7 +51,7 @@ export function useStore<TState extends object, StateSlice>(
     })
   }
 
-  return isPrimitive(state.value) ? readonly(state) : toRefs(refToReactive(state) as Record<any, any>)
+  return isPrimitive(state.value) ? readonly(state) : toRefs(toReactive(state))
 }
 
 export type UseBoundStore<S extends StoreApi<unknown>> = {

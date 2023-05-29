@@ -1,16 +1,4 @@
 import type { Ref, ToRefs } from 'vue'
-import { computed, reactive, unref } from 'vue'
-
-export function refToReactive<O, K extends keyof O>(
-  result: Ref<O>,
-): O {
-  const keys = Object.keys(unref(result) as any)
-  return reactive(
-    Object.fromEntries(
-      keys.map(key => [key, computed(() => result.value[key as K])]),
-    ),
-  ) as unknown as O
-}
 
 export function isPrimitive<T>(val: T): boolean {
   if (typeof val === 'object')

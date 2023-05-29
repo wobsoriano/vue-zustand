@@ -47,5 +47,8 @@
   "homepage": "https://github.com/wobsoriano/vue-zustand#readme",
   "eslintConfig": {
     "extends": "@antfu"
+  },
+  "dependencies": {
+    "@vueuse/core": "^10.1.2"
   }
 }
