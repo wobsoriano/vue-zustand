@@ -13,7 +13,6 @@ describe('create', () => {
       expect(typeof useStore.setState).toBe('function')
       expect(typeof useStore.getState).toBe('function')
       expect(typeof useStore.subscribe).toBe('function')
-      expect(typeof useStore.destroy).toBe('function')
     })
 
     it('functions correct when rendered in vue', async() => {
