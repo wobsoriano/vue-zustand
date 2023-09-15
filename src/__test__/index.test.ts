@@ -15,7 +15,7 @@ describe('create', () => {
       expect(typeof useStore.subscribe).toBe('function')
     })
 
-    it('functions correct when rendered in vue', async() => {
+    it('functions correct when rendered in vue', async () => {
       const useStore = create<{ bears: number }>(set => ({
         bears: 0,
         increase: () => set(state => ({ bears: state.bears + 1 })),
@@ -49,7 +49,7 @@ describe('create', () => {
       expect(wrapper.get('[data-test="bears"]').text()).toBe('1')
     })
 
-    it('allows multiple state slices', async() => {
+    it('allows multiple state slices', async () => {
       interface BearState {
         bears: number
         bulls: number
@@ -72,12 +72,17 @@ describe('create', () => {
             state => ({ bears: state.bears, increase: state.increase }),
             shallow,
           )
-          return { bears, increase }
+
+          function handleIncrease() {
+            increase.value()
+          }
+
+          return { bears, handleIncrease }
         },
         template: `
           <div>
             <div data-test="bears">{{ bears }}</div>
-            <button data-test="inc" @click="increase">+</button>
+            <button data-test="inc" @click="handleIncrease">+</button>
           </div>
         `,
       })

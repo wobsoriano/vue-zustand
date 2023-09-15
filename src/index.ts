@@ -28,6 +28,10 @@ export function useStore<TState extends object, StateSlice>(
   equalityFn?: (a: StateSlice, b: StateSlice) => boolean,
 ) {
   const initialValue = selector(api.getState())
+
+  if (typeof initialValue === 'function')
+    return initialValue
+
   const state = ref(initialValue)
 
   const listener = (nextState: TState, previousState: TState) => {
@@ -55,11 +59,11 @@ export function useStore<TState extends object, StateSlice>(
 }
 
 export type UseBoundStore<S extends StoreApi<unknown>> = {
-  (): IsPrimitive<ExtractState<S>>
+  (): ExtractState<S> extends (...args: any[]) => any ? ExtractState<S> : IsPrimitive<ExtractState<S>>
   <U>(
     selector: (state: ExtractState<S>) => U,
     equals?: (a: U, b: U) => boolean
-  ): IsPrimitive<U>
+  ): U extends (...args: any[]) => any ? U : IsPrimitive<IsPrimitive<U>>
 } & S
 
 interface Create {
@@ -72,7 +76,7 @@ interface Create {
   <S extends StoreApi<unknown>>(store: S): UseBoundStore<S>
 }
 
-const createImpl = <T extends object>(createState: StateCreator<T, [], []>) => {
+function createImpl<T extends object>(createState: StateCreator<T, [], []>) {
   const api
     = typeof createState === 'function' ? createZustandStore(createState) : createState
 

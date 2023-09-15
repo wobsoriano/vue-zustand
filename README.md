@@ -7,13 +7,16 @@ Vue 2 users can use [this solution](https://gist.github.com/Zikoat/ec47ff3646f88
 ## Install
 
 ```sh
-pnpm add zustand vue-zustand
+npm install zustand vue-zustand
 ```
 
-## Example
+## Usage
+
+First create a store
+
+Your store is a composable! You can put anything in it: primitives, objects, functions. State has to be updated immutably and the set function [merges state](https://github.com/pmndrs/zustand/blob/main/docs/guides/immutable-state-and-merging.md) to help it.
 
 ```ts
-// store.ts
 import create from 'vue-zustand'
 
 interface BearState {
@@ -27,28 +30,49 @@ export const useStore = create<BearState>(set => ({
 }))
 ```
 
-```html
-<!-- Component.vue -->
-<script setup lang="ts">
-  import { useStore } from './store'
+Then bind your components, and that's it!
 
-  const { bears, increase } = useStore()
+Use the composable anywhere, no providers are needed.
 
-  // bears.value
-  // increase.value()
+```vue
+<script setup>
+import { useStore } from './store'
+
+const bears = useStore(state => state.bears)
 </script>
 
 <template>
   <h1>{{ bears }} around here ...</h1>
-  <button @click="increase">one up</button>
 </template>
+```
+
+```vue
+<script setup>
+import { useStore } from './store'
+
+const increase = useBearStore(state => state.increase)
+</script>
+
+<template>
+  <button @click="increase">
+    one up
+  </button>
+</template>
+```
+
+## Recipes
+
+### Fetching everything
+
+```ts
+const state = useStore()
 ```
 
 ## Selecting multiple state slices
 
 ```ts
-const bears = useStore(state => state.bears) // bears.value
-const bulls = useStore(state => state.bulls) // bulls.value
+const nuts = useStore(state => state.nuts)
+const honey = useStore(state => state.honey)
 ```
 
 If you want to construct a single object with multiple state-picks inside, similar to redux's mapStateToProps, you can tell zustand that you want the object to be diffed shallowly by passing the `shallow` equality function.
