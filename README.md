@@ -50,7 +50,7 @@ const bears = useStore(state => state.bears)
 <script setup>
 import { useStore } from './store'
 
-const increase = useBearStore(state => state.increase)
+const increase = useStore(state => state.increase)
 </script>
 
 <template>
