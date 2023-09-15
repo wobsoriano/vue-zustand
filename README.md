@@ -12,7 +12,7 @@ npm install zustand vue-zustand
 
 ## Usage
 
-First create a store
+### First create a store
 
 Your store is a composable! You can put anything in it: primitives, objects, functions. State has to be updated immutably and the set function [merges state](https://github.com/pmndrs/zustand/blob/main/docs/guides/immutable-state-and-merging.md) to help it.
 
@@ -30,7 +30,7 @@ export const useStore = create<BearState>(set => ({
 }))
 ```
 
-Then bind your components, and that's it!
+### Then bind your components, and that's it!
 
 Use the composable anywhere, no providers are needed.
 
