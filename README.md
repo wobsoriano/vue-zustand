@@ -93,6 +93,7 @@ const [bears, bulls] = useStore(state => [state.bears, state.bulls], shallow)
 ## Nuxt
 
 ```ts
+// plugins/zustand.ts
 export default defineNuxtPlugin((nuxtApp) => {
   if (process.server) {
     nuxtApp.hooks.hook('app:rendered', () => {
@@ -114,4 +115,4 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 ## License
 
-MIT License © 2022 [Robert Soriano](https://github.com/wobsoriano)
+MIT
