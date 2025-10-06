@@ -47,7 +47,7 @@ describe('create', () => {
       expect(wrapper.get('[data-test="bears"]').text()).toBe('1')
     })
 
-    it('allows multiple state slices', async () => {
+    it('allows multiple state slices (object)', async () => {
       interface BearState {
         bears: number
         bulls: number
@@ -73,6 +73,46 @@ describe('create', () => {
           }
 
           return { bears, handleIncrease }
+        },
+        template: `
+          <div>
+            <div data-test="bears">{{ bears }}</div>
+            <button data-test="inc" @click="handleIncrease">+</button>
+          </div>
+        `,
+      })
+
+      const wrapper = mount(App)
+      expect(wrapper.get('[data-test="bears"]').text()).toBe('0')
+      wrapper.get('[data-test="inc"]').trigger('click')
+      await nextTick()
+      expect(wrapper.get('[data-test="bears"]').text()).toBe('1')
+    })
+
+    it('allows multiple state slices (array)', async () => {
+      interface BearState {
+        bears: number
+        bulls: number
+        increase: () => void
+      }
+
+      const useStore = create<BearState>(set => ({
+        bears: 0,
+        bulls: 0,
+        increase: () =>
+          set(state => ({ bears: state.bears + 1, bulls: state.bulls + 1 })),
+      }))
+
+      const App = defineComponent({
+        setup() {
+          const store = useStore(state => [state.bears, state.increase])
+
+          function handleIncrease() {
+            // @ts-expect-error: Fix typings for array state slice
+            store[1].value()
+          }
+
+          return { bears: store[0], handleIncrease }
         },
         template: `
           <div>
