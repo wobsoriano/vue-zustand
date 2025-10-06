@@ -1,9 +1,7 @@
-/* eslint-disable vue/one-component-per-file */
 import { mount } from '@vue/test-utils'
-import { shallow } from 'zustand/shallow'
 import { describe, expect, it } from 'vitest'
 import { defineComponent, nextTick } from 'vue'
-import create from '../index'
+import { create } from '../index'
 
 describe('create', () => {
   describe('composable', () => {
@@ -68,10 +66,7 @@ describe('create', () => {
           const {
             bears,
             increase,
-          } = useStore(
-            state => ({ bears: state.bears, increase: state.increase }),
-            shallow,
-          )
+          } = useStore(state => ({ bears: state.bears, increase: state.increase }))
 
           function handleIncrease() {
             increase.value()

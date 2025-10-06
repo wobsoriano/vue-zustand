@@ -1,54 +1,51 @@
 {
   "name": "vue-zustand",
+  "type": "module",
   "version": "0.6.0",
+  "packageManager": "pnpm@10.18.0+sha512.e804f889f1cecc40d572db084eec3e4881739f8dec69c0ff10d2d1beff9a4e309383ba27b5b750059d7f4c149535b6cd0d2cb1ed3aeb739239a4284a68f40cfa",
   "description": "🐻 Bear necessities for Vue.",
   "license": "MIT",
+  "homepage": "https://github.com/wobsoriano/vue-zustand#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/wobsoriano/vue-zustand.git"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
   "exports": {
-    "types": "./dist/index.d.ts",
-    "require": "./dist/index.js",
-    "import": "./dist/index.mjs"
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
   },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build-fast": "tsup src/index.ts --format esm,cjs --external zustand/vanilla",
-    "build": "pnpm run build-fast --dts-resolve",
+    "build": "tsdown",
     "test": "vitest run",
     "test:watch": "vitest watch",
     "release": "bumpp --commit --push --tag && pnpm publish",
     "prepublishOnly": "pnpm run build",
-    "lint": "eslint --ext=js,ts .",
-    "lint:fix": "eslint --ext=js,ts . --fix"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "peerDependencies": {
-    "vue": ">=3.2.0",
-    "zustand": ">=4.3.0"
-  },
-  "devDependencies": {
-    "@antfu/eslint-config": "^0.39.3",
-    "@vue/test-utils": "^2.3.2",
-    "bumpp": "^9.1.0",
-    "eslint": "^8.41.0",
-    "jsdom": "^22.1.0",
-    "tsup": "^6.7.0",
-    "typescript": "^5.0.4",
-    "vitest": "^0.31.1",
-    "vue": "^3.3.4",
-    "zustand": "^4.3.8"
-  },
-  "homepage": "https://github.com/wobsoriano/vue-zustand#readme",
-  "eslintConfig": {
-    "extends": "@antfu"
+    "vue": "^3.2.0",
+    "zustand": "^5.0.0"
   },
   "dependencies": {
-    "@vueuse/core": "^10.1.2"
+    "@vueuse/core": "^13.9.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^5.4.1",
+    "@vue/test-utils": "^2.4.6",
+    "bumpp": "^10.3.0",
+    "eslint": "^9.36.0",
+    "jsdom": "^27.0.0",
+    "tsdown": "^0.15.6",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4",
+    "vue": "^3.5.22",
+    "zustand": "^5.0.8"
   }
 }

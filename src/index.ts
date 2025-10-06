@@ -1,31 +1,29 @@
-import type { UnwrapRef } from 'vue'
-import { getCurrentInstance, onScopeDispose, readonly, ref, toRefs } from 'vue'
-import { toReactive } from '@vueuse/core'
-
-import type {
-  Mutate,
-  StateCreator,
-  StoreApi,
-  StoreMutatorIdentifier,
-} from 'zustand/vanilla'
-import { createStore as createZustandStore } from 'zustand/vanilla'
+import type { ExtractState, Mutate, StateCreator, StoreApi, StoreMutatorIdentifier } from 'zustand/vanilla'
 import type { IsPrimitive } from './util'
+
+import { toReactive } from '@vueuse/core'
+import { getCurrentInstance, onScopeDispose, readonly, ref, toRefs } from 'vue'
+import { createStore } from 'zustand/vanilla'
 import { isPrimitive } from './util'
 
-type ExtractState<S> = S extends { getState: () => infer T } ? T : never
+type ReadonlyStoreApi<T> = Pick<
+  StoreApi<T>,
+  'getState' | 'getInitialState' | 'subscribe'
+>
 
-export function useStore<S extends StoreApi<unknown>>(api: S): ExtractState<S>
+const identity = <T>(arg: T): T => arg
+export function useStore<S extends ReadonlyStoreApi<unknown>>(
+  api: S,
+): ExtractState<S>
 
-export function useStore<S extends StoreApi<unknown>, U>(
+export function useStore<S extends ReadonlyStoreApi<unknown>, U>(
   api: S,
   selector: (state: ExtractState<S>) => U,
-  equalityFn?: (a: U, b: U) => boolean
 ): U
 
-export function useStore<TState extends object, StateSlice>(
-  api: StoreApi<TState>,
-  selector: (state: TState) => StateSlice = api.getState as any,
-  equalityFn?: (a: StateSlice, b: StateSlice) => boolean,
+export function useStore<TState, StateSlice>(
+  api: ReadonlyStoreApi<TState>,
+  selector: (state: TState) => StateSlice = identity as any,
 ) {
   const initialValue = selector(api.getState())
 
@@ -34,17 +32,8 @@ export function useStore<TState extends object, StateSlice>(
 
   const state = ref(initialValue)
 
-  const listener = (nextState: TState, previousState: TState) => {
-    const prevStateSlice = selector(previousState)
-    const nextStateSlice = selector(nextState)
-
-    if (equalityFn !== undefined) {
-      if (!equalityFn(prevStateSlice, nextStateSlice))
-        state.value = nextStateSlice as UnwrapRef<StateSlice>
-    }
-    else {
-      state.value = nextStateSlice as UnwrapRef<StateSlice>
-    }
+  const listener = (nextState: TState) => {
+    state.value = selector(nextState)
   }
 
   const unsubscribe = api.subscribe(listener)
@@ -58,38 +47,29 @@ export function useStore<TState extends object, StateSlice>(
   return isPrimitive(state.value) ? readonly(state) : toRefs(toReactive(state))
 }
 
-export type UseBoundStore<S extends StoreApi<unknown>> = {
+export type UseBoundStore<S extends ReadonlyStoreApi<unknown>> = {
   (): ExtractState<S> extends (...args: any[]) => any ? ExtractState<S> : IsPrimitive<ExtractState<S>>
-  <U>(
-    selector: (state: ExtractState<S>) => U,
-    equals?: (a: U, b: U) => boolean
-  ): U extends (...args: any[]) => any ? U : IsPrimitive<IsPrimitive<U>>
+  <U>(selector: (state: ExtractState<S>) => U): U extends (...args: any[]) => any ? U : IsPrimitive<IsPrimitive<U>>
 } & S
 
 interface Create {
   <T, Mos extends [StoreMutatorIdentifier, unknown][] = []>(
-    initializer: StateCreator<T, [], Mos>
+    initializer: StateCreator<T, [], Mos>,
   ): UseBoundStore<Mutate<StoreApi<T>, Mos>>
   <T>(): <Mos extends [StoreMutatorIdentifier, unknown][] = []>(
-    initializer: StateCreator<T, [], Mos>
+    initializer: StateCreator<T, [], Mos>,
   ) => UseBoundStore<Mutate<StoreApi<T>, Mos>>
-  <S extends StoreApi<unknown>>(store: S): UseBoundStore<S>
 }
 
-function createImpl<T extends object>(createState: StateCreator<T, [], []>) {
-  const api
-    = typeof createState === 'function' ? createZustandStore(createState) : createState
+function createImpl<T>(createState: StateCreator<T, [], []>) {
+  const api = createStore(createState)
 
-  const useBoundStore: any = (selector?: any, equalityFn?: any) =>
-    useStore(api, selector, equalityFn)
+  const useBoundStore: any = (selector?: any) => useStore(api, selector)
 
   Object.assign(useBoundStore, api)
 
   return useBoundStore
 }
 
-const create = (<T extends object>(
-  createState: StateCreator<T, [], []> | undefined,
-) => (createState ? createImpl(createState) : createImpl)) as Create
-
-export default create
+export const create = (<T>(createState: StateCreator<T, [], []> | undefined) =>
+  createState ? createImpl(createState) : createImpl) as Create

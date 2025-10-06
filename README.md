@@ -1,8 +1,6 @@
 # vue-zustand
 
-State-management solution for Vue 3 based on [zustand](https://github.com/pmndrs/zustand).
-
-Vue 2 users can use [this solution](https://gist.github.com/Zikoat/ec47ff3646f889d09f8c6d350e6060f6).
+State-management solution for Vue based on [zustand](https://github.com/pmndrs/zustand).
 
 ## Install
 
@@ -75,22 +73,19 @@ const nuts = useStore(state => state.nuts)
 const honey = useStore(state => state.honey)
 ```
 
-If you want to construct a single object with multiple state-picks inside, similar to redux's mapStateToProps, you can tell zustand that you want the object to be diffed shallowly by passing the `shallow` equality function.
+You can also construct a single object with multiple state-picks inside, similar to redux's mapStateToProps:
 
 ```ts
-import shallow from 'zustand/shallow'
-
 // Object pick, updates either state.bears or state.bulls change
-const { bears, bulls } = useStore(
-  state => ({ bears: state.bears, bulls: state.bulls }),
-  shallow,
-)
+const { bears, bulls } = useStore(state => ({ bears: state.bears, bulls: state.bulls }))
 
 // Array pick, updates either state.bears or state.bulls change
-const [bears, bulls] = useStore(state => [state.bears, state.bulls], shallow)
+const [bears, bulls] = useStore(state => [state.bears, state.bulls])
 ```
 
 ## Nuxt
+
+To support SSR, follow these Nuxt plugin instructions:
 
 ```ts
 // plugins/zustand.ts
